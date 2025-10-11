@@ -1,15 +1,24 @@
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const cors = require("cors")
+const authRouter = require("./src/routes/auth")
 
 const app = express();
 const port = 9000;
 
-app.use(express.json());
+app.use(cors({
+origin: ["http://localhost:3000"],
+credentials: true,
+}));
+
+app.use(express.json())
 
 app.get("/", async (request, response) => {
   response.send("Intro to MongoDb and MonGoose");
 });
+
+app.use("/auth", authRouter)
 
 mongoose
   .connect(process.env.MONGODB_URL)

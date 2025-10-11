@@ -5,7 +5,7 @@ const { createToken } = require("../../utils");
 
 const signUp = async (req, res) => {
   const { username, password, email } = req.body;
-  if (!username || !password || email) {
+  if (!username || !password || !email) {
     res
       .status(400)
       .json({ message: "Please enter your username, password and email" });
@@ -20,9 +20,9 @@ const signUp = async (req, res) => {
     });
   }
   try {
-    const user = await User.findOne(email);
+    const user = await User.findOne({email});
     if (user) {
-      res.status(400).json({ message: "This email is already being used" });
+     return res.status(400).json({ message: "This email is already being used" });
     }
     const salt = await bcrypt.genSalt(10);
     const hashpassword = await bcrypt.hash(password, salt);
@@ -41,7 +41,8 @@ const signUp = async (req, res) => {
       token,
     });
   } catch (error) {
-    return res.status(400).json({ message: "There was an error signing up" });
+     console.error(error);
+    return res.status(400).json({ message: error.message });
   }
 };
 
