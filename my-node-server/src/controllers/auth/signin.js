@@ -16,14 +16,15 @@ const signIn = async (req, res) => {
     if (!isMatch) {
       return res.status.json({ message: "Invalid Credentaials" });
     }
-    const token = createToken(user._id)
+    const token = createToken(user._id);
     return res.status(200).json({
       user: {
         username: user.username,
         email: user.email,
-        Admin: user.Admin
+        Admin: user.Admin,
       },
-    }, token);
+      token,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
