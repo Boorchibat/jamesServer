@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Property = require("../../schema/properties");
-const { findByIdAndUpdate } = require("../../schema/userSchema");
 
 const updateProperty = async (req, res) => {
   const { id } = req.params;
@@ -19,46 +18,40 @@ const updateProperty = async (req, res) => {
     mainImage,
     images,
   } = req.body;
-  if (
-    !address ||
-    !description ||
-    !title ||
-    !type ||
-    !city ||
-    !neighborhood ||
-    !year ||
-    !sqft ||
-    !bedrooms ||
-    !bathrooms ||
-    !balcony ||
-    !mainImage ||
-    !images
-  ) {
-    res.status(400).json({ message: "Please enter all the fields" });
+
+  if (!address || !description || !title || !type || !city || !neighborhood || !year || !sqft || !bedrooms || !bathrooms || balcony === undefined || !mainImage || !images) {
+    return res.status(400).json({ message: "Please enter all the fields" });
   }
+
   try {
-    const updateProperty = await Property.findByIdAndUpdate(
+    const existingProperty = await Property.findById(id);
+    if (!existingProperty) {
+      return res.status(404).json({ message: "Property not found" });
+    }
+
+    const updatedProperty = await Property.findByIdAndUpdate(
       id,
       {
-        address: address || Property.address,
-        description: description || Property.description,
-        title: title || Property.title,
-        type: type || Property.type,
-        city: city || Property.city,
-        neighborhood: neighborhood || Property.neighborhood,
-        year: year || Property.year,
-        sqft: sqft || Property.sqft,
-        bedrooms: bedrooms || Property.bedrooms,
-        bathrooms: bathrooms || Property.bathrooms,
-        balcony: balcony || Property.balcony,
-        mainImage: mainImage || Property.mainImage,
-        images: images || Property.images,
+        address: address || existingProperty.address,
+        description: description || existingProperty.description,
+        title: title || existingProperty.title,
+        type: type || existingProperty.type,
+        city: city || existingProperty.city,
+        neighborhood: neighborhood || existingProperty.neighborhood,
+        year: year || existingProperty.year,
+        sqft: sqft || existingProperty.sqft,
+        bedrooms: bedrooms || existingProperty.bedrooms,
+        bathrooms: bathrooms || existingProperty.bathrooms,
+        balcony: balcony ?? existingProperty.balcony,
+        mainImage: mainImage || existingProperty.mainImage,
+        images: images || existingProperty.images,
       },
       { new: true }
     );
-    return res.status(201).json(updateProperty);
+
+    return res.status(200).json(updatedProperty);
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
