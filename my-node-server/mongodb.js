@@ -9,7 +9,7 @@ const app = express();
 const port = 9000;
 
 app.use(cors({
-origin: ["http://localhost:9000"],
+origin: ["http://localhost:9000", "http://localhost:3000"],
 credentials: true,
 }));
 
