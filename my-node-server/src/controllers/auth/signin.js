@@ -21,6 +21,7 @@ const signIn = async (req, res) => {
       user: {
         username: user.username,
         email: user.email,
+        Admin: user.Admin
       },
     }, token);
   } catch (error) {
