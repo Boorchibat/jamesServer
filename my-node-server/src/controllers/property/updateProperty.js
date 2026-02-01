@@ -6,6 +6,7 @@ const updateProperty = async (req, res) => {
   const {
     address,
     description,
+    price,
     title,
     type,
     city,
@@ -19,7 +20,22 @@ const updateProperty = async (req, res) => {
     images,
   } = req.body;
 
-  if (!address || !description || !title || !type || !city || !neighborhood || !year || !sqft || !bedrooms || !bathrooms || balcony === undefined || !mainImage || !images) {
+  if (
+    !address ||
+    !description ||
+    !price ||
+    !title ||
+    !type ||
+    !city ||
+    !neighborhood ||
+    !year ||
+    !sqft ||
+    !bedrooms ||
+    !bathrooms ||
+    balcony === undefined ||
+    !mainImage ||
+    !images
+  ) {
     return res.status(400).json({ message: "Please enter all the fields" });
   }
 
@@ -35,6 +51,7 @@ const updateProperty = async (req, res) => {
         address: address || existingProperty.address,
         description: description || existingProperty.description,
         title: title || existingProperty.title,
+        price: price || existingProperty.price,
         type: type || existingProperty.type,
         city: city || existingProperty.city,
         neighborhood: neighborhood || existingProperty.neighborhood,
@@ -46,7 +63,7 @@ const updateProperty = async (req, res) => {
         mainImage: mainImage || existingProperty.mainImage,
         images: images || existingProperty.images,
       },
-      { new: true }
+      { new: true },
     );
 
     return res.status(200).json(updatedProperty);

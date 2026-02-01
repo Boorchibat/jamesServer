@@ -3,6 +3,7 @@ const Property = require("../../schema/properties");
 const createProperty = async (req, res) => {
   const {
     address,
+    price,
     description,
     title,
     type,
@@ -19,6 +20,7 @@ const createProperty = async (req, res) => {
   if (
     !address ||
     !description ||
+    !price ||
     !title ||
     !type ||
     !city ||
@@ -37,6 +39,7 @@ const createProperty = async (req, res) => {
     const property = await Property.create({
       address,
       description,
+      price,
       title,
       type,
       city,
